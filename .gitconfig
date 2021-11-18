@@ -1,0 +1,13 @@
+[user]
+	name = John Rose
+	email = johnedmundrose@gmail.com
+[core]
+	editor = subl -n -w
+[diff]
+	tool = bcomp
+[merge]
+	tool = bcomp
+[mergetool "bcomp"]
+	trustExitCode = true
+[init]
+	defaultBranch = main
