@@ -1,5 +1,5 @@
 # If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+# export PATH=$HOME/    :/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
 export ZSH=/Users/booty/.oh-my-zsh
@@ -83,6 +83,7 @@ alias ohmyzsh="subl ~/.oh-my-zsh"
 # Ruby+Rails
 alias be="bundle exec"
 alias ber="bundle exec rake"
+alias bi="bundle install"
 alias rc="bundle exec rails console"
 alias rs="bundle exec rails server"
 alias rrc="bundle exec rescue rails console"
@@ -105,12 +106,13 @@ alias sublcomp="$EDITOR /Users/booty/Dropbox/Sublime/Packages/User/"
 alias gs="git status"
 alias gt="gittower ."
 alias ga="git add"
-alias gc="git commit"
+alias gcm="git commit --message"
 alias gp="git push"
 alias gl="git log"
 alias gsl="git log --oneline --decorate -20"
 alias gsla="git log --oneline --decorate --graph --all -20"
 alias gslap="slap = log --oneline --decorate --graph --all"
+alias gd="git diff"
 alias gnukelocalorphans="git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D"
 
 
@@ -161,7 +163,6 @@ function gco() {
   fi
 }
 
-
 # Basic shell stuff
 alias reload="source ~/.zshrc"
 alias cag="clear; ag --ignore-dir=vendor,log -W 100 $1"
@@ -173,9 +174,6 @@ alias rsync-copy="rsync -avz --progress -h"
 alias rsync-move="rsync -avz --progress -h --remove-source-files"
 alias rsync-update="rsync -avzu --progress -h"
 alias rsync-synchronize="rsync -avzu --delete --progress -h"
-
-# Compliancemate
-alias cmm="cd ~/proj/compliancemate/compliancemate"
 
 # Compliancemate - psql (note: these will use the passwords in ~/.pgpass)
 # alias set_danger_color="it2setcolor preset 'Solarized Darcula'"
@@ -206,6 +204,9 @@ alias pgtail="tail -f -n 1000 /usr/local/var/log/postgresql@12.log"
 # Redis
 alias redistail="tail -f -n 100 /usr/local/var/log/redis.log"
 alias redisconf="subl /usr/local/etc/redis.conf"
+
+# Sublime
+alias subedit="cd ~/Dropbox/Sublime/Packages/User"
 
 # Usage: deepcp foo.jpg somedir/thatdoesnt/existyet/foo.jpg will create somedir/thatdoesnt/existyet/ if needed
 # http://stackoverflow.com/questions/1529946/linux-copy-and-create-destination-dir-if-it-does-not-exist (see bury_copy)
@@ -257,9 +258,9 @@ alias sshfix="eval \"$(ssh-agent)\" && ssh-add ~/.ssh/id_rsa"
 # test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 echo "loaded zshrc"
 
-eval "$(rbenv init -)"
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export PATH="/usr/local/opt/postgresql@12/bin:$PATH"
 
-source /Users/booty/.config/broot/launcher/bash/br
+. /usr/local/opt/asdf/libexec/asdf.sh
+
+# source /Users/booty/.config/broot/launcher/bash/br
