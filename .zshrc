@@ -95,6 +95,9 @@ alias r="rails"
 alias rg="rails g"
 alias rt="rails test"
 alias rgm="rails generate migration"
+alias rr="rails routes | ag -v \"active_storage|action_mailbox|turbo\""
+alias rrr="rails routes"
+
 alias beg="bundle exec guard"
 alias ber="bundle exec rspec"
 alias cber="clear; bundle exec rspec"
@@ -167,6 +170,7 @@ function gco() {
 alias reload="source ~/.zshrc"
 alias cag="clear; ag --ignore-dir=vendor,log -W 100 $1"
 alias lls="ls -lah"
+alias lah="ls -lah"
 alias twee="tree --filelimit=20"
 
 # rsync
@@ -198,8 +202,8 @@ alias cowboybackup="rsync -avziut /Volumes/SpaceCowboy/ /Volumes/SpaceHarrier"
 alias brewup="brew update && brew upgrade && brew cleanup && brew doctor"
 
 # Postgres
-alias pgconf="$EDITOR /usr/local/var/postgresql@12/postgresql.conf"
-alias pgtail="tail -f -n 1000 /usr/local/var/log/postgresql@12.log"
+alias pgconf="$EDITOR /usr/local/var/postgresql@14/postgresql.conf"
+alias pgtail="tail -f -n 1000 /usr/local/var/log/postgresql@14.log"
 
 # Redis
 alias redistail="tail -f -n 100 /usr/local/var/log/redis.log"
@@ -211,9 +215,11 @@ alias subedit="cd ~/Dropbox/Sublime/Packages/User"
 # Usage: deepcp foo.jpg somedir/thatdoesnt/existyet/foo.jpg will create somedir/thatdoesnt/existyet/ if needed
 # http://stackoverflow.com/questions/1529946/linux-copy-and-create-destination-dir-if-it-does-not-exist (see bury_copy)
 deepcp() { mkdir -p `dirname $2` && cp "$1" "$2"; }
-mp3all() { parallel -i -j4 ffmpeg -i {} -qscale:a 0 {}.mp3 ::: ls ./*.flac }
-aacall() { parallel -i -j4 ffmpeg -i {} -vn -c:a libfdk_aac -afterburner 1 -vbr 5 {}.m4a ::: ls ./*.flac; }
-aacall2() { parallel -i -j4 ffmpeg -i {} -vn -c:a libfdk_aac -vbr 5 {}.m4a ::: ls ./*.m4a; }
+mp3all() { parallel -i -j6 ffmpeg -i {} -qscale:a -vcodec copy  0 {}.mp3 ::: ls ./*.flac }
+aacall() { parallel -i -j6 ffmpeg -i {} -vn -c:a libfdk_aac -afterburner 1 -vbr 5 -vcodec copy  {}.m4a ::: ls ./*.flac; }
+aacall2() { parallel -i -j6 ffmpeg -i {} -vn -c:a libfdk_aac -vbr 5 -vcodec copy  {}.m4a ::: ls ./*.m4a; }
+alacall() { parallel -i -j6 ffmpeg -i {} -acodec alac -vcodec copy {}.m4a ::: ls ./*.flac; }
+
 
 #####################################################################################################
 # Fun ###############################################################################################
@@ -228,6 +234,7 @@ toiletfonts () {
 	done
 }
 alias toylet="toilet -w 180 -f mono12"
+alias ttoylet="toilet -w 180 -f pagga"
 alias baker="afplay /Users/booty/Dropbox/Music\ and\ Media/ForScripts/BakerStreet.mp3"
 alias glory="afplay /Users/booty/Dropbox/Music\ and\ Media/ForScripts/10\ _Together,\ In\ the\ Glory\ of\ the\ Legend_\ from\ Albert\ Odyssey\ 2.mp3"
 alias triumph=glory
@@ -248,12 +255,12 @@ export PSQL_EDITOR="subl --wait"
 # ???? stuff ########################################################################################
 #####################################################################################################
 
+# sanitize history
+cat ~/.zsh_history | ag -v "yt\-dlp|youtube\-dl" > ~/.zsh_history-tmp && mv ~/.zsh_history-tmp ~/.zsh_history
+
 source /Users/booty/.iterm2_shell_integration.zsh
 
 alias sshfix="eval \"$(ssh-agent)\" && ssh-add ~/.ssh/id_rsa"
-
-# wtf was this????
-# export PATH="/usr/local/sbin:$PATH:/Users/booty/Library/Python/3.7/bin:"
 
 # test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 echo "loaded zshrc"
@@ -262,5 +269,3 @@ echo "loaded zshrc"
 export PATH="/usr/local/opt/postgresql@12/bin:$PATH"
 
 . /usr/local/opt/asdf/libexec/asdf.sh
-
-# source /Users/booty/.config/broot/launcher/bash/br
