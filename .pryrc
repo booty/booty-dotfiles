@@ -1,45 +1,58 @@
 # frozen_string_literal: true
+
 #
 # require "dotiw"
 
-puts 'Loaded .pryrc! 🤟'
+puts "Loaded .pryrc! 🤟"
 if defined?(PryByebug)
-  Pry.commands.alias_command 'c', 'continue'
-  Pry.commands.alias_command 's', 'step'
-  Pry.commands.alias_command 'n', 'next'
-  Pry.commands.alias_command 'f', 'finish'
-  Pry.commands.alias_command 'b', 'break'
-  Pry.commands.alias_command 'bda', 'break --disable-all'
-  Pry.commands.alias_command 'bdac', 'break --disable-all; continue'
+  Pry.commands.alias_command "c", "continue"
+  Pry.commands.alias_command "s", "step"
+  Pry.commands.alias_command "n", "next"
+  Pry.commands.alias_command "f", "finish"
+  Pry.commands.alias_command "b", "break"
+  Pry.commands.alias_command "bda", "break --disable-all"
+  Pry.commands.alias_command "bdac", "break --disable-all; continue"
 end
 
 def pbcopy(obj)
-  IO.popen('pbcopy', 'w') { |pipe| pipe.puts obj }
+  IO.popen("pbcopy", "w") { |pipe| pipe.puts obj }
 end
 
 def subl(obj)
-  IO.popen('subl', 'w') { |pipe| pipe.puts obj }
+  IO.popen("subl", "w") { |pipe| pipe.puts obj }
 end
 
 def jstack
-  stuff = caller.reject {|x| x["rbenv/versions"] }
+  stuff = caller.reject { |x| x["rbenv/versions"] }
   stuff.map { |y| y.gsub(/\/Users\/booty/, "~").gsub(/compliancemate/, "cm") }
 end
 
 # -- Booty's stuff -------------------------------------------------------------
 
-class Jbo
-  TEMPFILE = '/Users/booty/proj/tmp/pry.sql'
-  MAX_COLUMN_LENGTH = 40
-  VERT_SEP = '|'
-  HORIZ_SEP = '-'
-
-  def self.sample_hash
-    { a:1, b:2, c:3, d:4, e:5 }
+def jhash(num: 5, increment: 1)
+  key = :a
+  (1..num).each_with_object({}) do |x, memo|
+    memo[key] = x * increment
+    key = key.succ
   end
+end
+
+def jary(num: 5, increment: 1, start: 0)
+  (0..num - 1).each_with_object(Array.new(num)) do |x, memo|
+    memo[x] = start + (x * increment)
+  end
+end
+
+def jary10; jary(increment: 10, start: 10); end
+
+class Jbo
+  TEMPFILE = "/Users/booty/proj/tmp/pry.sql"
+  MAX_COLUMN_LENGTH = 40
+  VERT_SEP = "|"
+  HORIZ_SEP = "-"
 
   if defined? Rails
-    if Rails::VERSION::STRING >= '4'
+    if Rails::VERSION::STRING >= "4"
       # returns an array of routes in Rails 4
       def self.formatted_routes
         r = Rails.application.routes.routes
@@ -49,7 +62,7 @@ class Jbo
       end
     else
       # returns an array of routes in Rails 3
-      require 'rails/application/route_inspector'
+      require "rails/application/route_inspector"
       def self.formatted_routes
         inspector = Rails::Application::RouteInspector.new
         inspector.format(Rails.application.routes.routes)
@@ -82,10 +95,16 @@ class Jbo
 
     def self.recordcount
       Rails.application.eager_load!
-      ApplicationRecord
-        .descendants
-        .sort_by(&:name)
-        .map { |x| "#{x.name} (#{ x.count rescue 'n/a' })" }
+      ApplicationRecord.
+        descendants.
+        sort_by(&:name).
+        map do |x|
+        "#{x.name} (#{begin
+          x.count
+        rescue StandardError
+          'n/a'
+        end})"
+      end
     end
   end
 
@@ -98,7 +117,7 @@ class Jbo
         col_length = [MAX_COLUMN_LENGTH, col_value.to_s.length].min
         max_data_lengths[col_number] = [
           max_data_lengths[col_number],
-          col_length
+          col_length,
         ].max
       end
     end
@@ -130,8 +149,8 @@ class Jbo
     end
     puts format_columns(
       result,
-      separator: '   ',
-      indent_size: indent_size
+      separator: "   ",
+      indent_size:,
     )
   end
 
@@ -145,7 +164,7 @@ class Jbo
     line_start_pos = 0
 
     while current_pos < s.length
-      if s[current_pos] == ' '
+      if s[current_pos] == " "
         in_word = false
       else
         last_word_start_pos = current_pos unless in_word
@@ -158,35 +177,35 @@ class Jbo
       end
 
       if s[current_pos] == "\n"
-        output_lines << s[line_start_pos..current_pos-1]
+        output_lines << s[line_start_pos..current_pos - 1]
         line_start_pos = current_pos
         current_pos += 1
       elsif (current_pos - line_start_pos) == width
-        next_char_is_whitespace = s[current_pos + 1] == ' '
+        next_char_is_whitespace = s[current_pos + 1] == " "
 
         if !in_word || (in_word && next_char_is_whitespace)
           # we're at the end of a word
           output_lines << s[line_start_pos..current_pos]
           current_pos += 1
         elsif in_word && (line_start_pos == last_word_start_pos)
-          output_lines << s[line_start_pos..current_pos-1] + "-"
+          output_lines << "#{s[line_start_pos..current_pos - 1]}-"
           in_word = false
           current_pos
         elsif in_word
-          output_lines << s[line_start_pos..last_word_start_pos-1]
+          output_lines << s[line_start_pos..last_word_start_pos - 1]
           current_pos = last_word_start_pos
         else
           output_lines << s[line_start_pos..current_pos]
           current_pos += 1
         end
-        current_pos += 1 if s[current_pos] == ' '
+        current_pos += 1 if s[current_pos] == " "
         line_start_pos = current_pos
       else
         current_pos += 1
       end
     end
-    output_lines << s[line_start_pos..s.length] #if current_pos > s.length
-    indent = ' ' * indent_size
+    output_lines << s[line_start_pos..s.length] # if current_pos > s.length
+    indent = " " * indent_size
     "#{indent}#{output_lines.join("\n#{indent}")}"
   end
 end
@@ -195,15 +214,15 @@ end
 
 def jsql(sql = nil, rows = 10); Jbo.sql(sql, rows); end
 def pryrc; `subl /Users/booty/.pryrc`; end
-def lpryrc; load '/Users/booty/.pryrc'; end
+def lpryrc; load "/Users/booty/.pryrc"; end
 def callercm; caller.reverse.select { |c| c =~ /compliancemate/ }; end
 
 # ------------------------------------------------------------------------------
 
 if defined?(ComplianceMate)
   INDENT_SIZE = 2
-  INDENT = '  '
-  DIVIDER = '-'
+  INDENT = "  "
+  DIVIDER = "-"
 
   # class List
   #   def debug(location: nil, date: Date.today)
@@ -245,38 +264,39 @@ if defined?(ComplianceMate)
       puts "#{INDENT * 2}#completion_percentage_for(location, date)\n\n"
       puts Cm.render_attributes(
         list.completion_percentage_for(location, date).attributes,
-        indent_size: INDENT_SIZE * 2
+        indent_size: INDENT_SIZE * 2,
       )
-      sql = CompletionQueryBuilder
-            .new
-            .list_percentages_for_all
-            .includes(:location)
-            .where(
-              location: location,
-              date: date
-            ).to_sql.delete("\n").gsub(/\s{2,}/,' ')
+      sql = CompletionQueryBuilder.
+        new.
+        list_percentages_for_all.
+        includes(:location).
+        where(
+          location:,
+          date:,
+        ).to_sql.delete("\n").gsub(/\s{2,}/, " ")
       puts Jbo.wrap(sql, width: 90, indent_size: INDENT_SIZE * 2)
     end
 
     def self.render_list_instance_and_responses(list:, location:, date:)
       puts Cm::Ui.subheader("ListInstance")
-      li = ListInstance.find_by(list: list, location: location, date: date)
+      li = ListInstance.find_by(list:, location:, date:)
       unless li
         puts "#{INDENT}No list instance!"
         return
       end
       puts Cm.render_attributes(
         li.attributes,
-        indent_size: INDENT_SIZE * 2
+        indent_size: INDENT_SIZE * 2,
       )
       r = Response.where(list_instance: li)
       return if r.none?
+
       puts Cm::Ui.subheader("Responses")
       r.each do |r|
         puts Cm.render_attributes(
           r.attributes,
           indent_size: INDENT_SIZE * 2,
-          omit_null: true
+          omit_null: true,
         )
       end
       puts Cm::Ui.subheader("List Items")
@@ -290,22 +310,22 @@ if defined?(ComplianceMate)
     end
 
     def self.render_ancestry(group, indent_size: INDENT_SIZE)
-      ancestors = group
-                  .self_and_ancestors
-                  .includes(:lists, :locations)
+      ancestors = group.
+        self_and_ancestors.
+        includes(:lists, :locations)
       return if ancestors.none?
 
-      puts Cm::Ui.subheader('Ancestry')
+      puts Cm::Ui.subheader("Ancestry")
       data = ancestors.reverse.map do |g|
         [
           g.id,
           g.name,
-          g.locations.map(&:id).join(','),
-          g.lists.map(&:id).join(',')
+          g.locations.map(&:id).join(","),
+          g.lists.map(&:id).join(","),
         ]
       end
       headers = %w[id name locations lists]
-      puts Jbo.format_columns(data, headers: headers, indent_size: indent_size)
+      puts Jbo.format_columns(data, headers:, indent_size:)
     end
 
     def self.render_lists(group)
@@ -313,23 +333,25 @@ if defined?(ComplianceMate)
         [
           l.id,
           l.name,
-          l.group_id
+          l.group_id,
         ]
       end
       return if data.none?
 
-      puts Cm::Ui.subheader('Lists')
+      puts Cm::Ui.subheader("Lists")
       headers = %w[id name group_id]
-      puts Jbo.format_columns(data, headers: headers, indent_size: 2)
+      puts Jbo.format_columns(data, headers:, indent_size: 2)
     end
 
     # TODO: put long values on separate lines
     # TODO: strip newlines from text fields
     def self.render_attributes(attributes_hash, indent_size: INDENT_SIZE, omit_null: false)
-      items = attributes_hash.select { |k,v| v || !omit_null }.each_with_object([]) do |keyval, memo|
+      items = attributes_hash.select do |_k, v|
+                v || !omit_null
+              end.each_with_object([]) do |keyval, memo|
         memo << "#{keyval[0]}: #{keyval[1]}"
       end
-      Jbo.columnify(items, number_of_columns: 3, indent_size: indent_size)
+      Jbo.columnify(items, number_of_columns: 3, indent_size:)
     end
 
     def self.boop(item, klass)
@@ -337,8 +359,6 @@ if defined?(ComplianceMate)
 
       klass.find(item)
     end
-
-
 
     class Ui
       def self.header(s)
@@ -351,7 +371,6 @@ if defined?(ComplianceMate)
     end
   end
 end
-
 
 # Copyright (c) Conrad Irwin <conrad.irwin@gmail.com> -- MIT License
 # Source: https://github.com/ConradIrwin/pry-debundle
@@ -375,7 +394,6 @@ end
 #   Call 'debundle!' from IRB when you need to.
 #
 class << Pry
-
   # Break out of the Bundler jail.
   #
   # This can be used to load files in development that are not in your Gemfile (for
@@ -392,10 +410,11 @@ class << Pry
   #
   def debundle!
     return unless defined?(Bundler)
+
     loaded = false
 
     if rubygems_18_or_better?
-      if Gem.post_reset_hooks.reject!{ |hook| hook.source_location.first =~ %r{/bundler/} }
+      if Gem.post_reset_hooks.reject! { |hook| hook.source_location.first =~ %r{/bundler/} }
         # Bundler.preserve_gem_path
         Gem.clear_paths
         Gem::Specification.reset
@@ -412,14 +431,34 @@ class << Pry
     else
       raise "No hacks found :("
     end
-  rescue => e
+  rescue StandardError => e
     puts "Debundling failed: #{e.message}"
     puts "When reporting bugs to https://github.com/ConradIrwin/pry-debundle, please include:"
-    puts "* gem version: #{Gem::VERSION rescue 'undefined'}"
-    puts "* bundler version: #{Bundler::VERSION rescue 'undefined'}"
-    puts "* pry version: #{Pry::VERSION rescue 'undefined'}"
-    puts "* ruby version: #{RUBY_VERSION rescue 'undefined'}"
-    puts "* ruby engine: #{RUBY_ENGINE rescue 'undefined'}"
+    puts "* gem version: #{begin
+      Gem::VERSION
+    rescue StandardError
+      'undefined'
+    end}"
+    puts "* bundler version: #{begin
+      Bundler::VERSION
+    rescue StandardError
+      'undefined'
+    end}"
+    puts "* pry version: #{begin
+      Pry::VERSION
+    rescue StandardError
+      'undefined'
+    end}"
+    puts "* ruby version: #{begin
+      RUBY_VERSION
+    rescue StandardError
+      'undefined'
+    end}"
+    puts "* ruby engine: #{begin
+      RUBY_ENGINE
+    rescue StandardError
+      'undefined'
+    end}"
   else
     load_additional_plugins if loaded
   end
@@ -448,25 +487,29 @@ class << Pry
   # Ugh, this stuff is quite vile.
   def remove_bundler_monkeypatches
     if rubygems_20_or_better?
-      load 'rubygems/core_ext/kernel_require.rb'
+      load "rubygems/core_ext/kernel_require.rb"
     else
-      load 'rubygems/custom_require.rb'
+      load "rubygems/custom_require.rb"
     end
 
     if rubygems_18_or_better?
       Kernel.module_eval do
-        def gem(gem_name, *requirements) # :doc:
-          skip_list = (ENV['GEM_SKIP'] || "").split(/:/)
+        # :doc:
+        def gem(gem_name, *requirements)
+          skip_list = (ENV["GEM_SKIP"] || "").split(/:/)
           raise Gem::LoadError, "skipping #{gem_name}" if skip_list.include? gem_name
+
           spec = Gem::Dependency.new(gem_name, *requirements).to_spec
-          spec.activate if spec
+          spec&.activate
         end
       end
     else
       Kernel.module_eval do
-        def gem(gem_name, *requirements) # :doc:
-          skip_list = (ENV['GEM_SKIP'] || "").split(/:/)
+        # :doc:
+        def gem(gem_name, *requirements)
+          skip_list = (ENV["GEM_SKIP"] || "").split(/:/)
           raise Gem::LoadError, "skipping #{gem_name}" if skip_list.include? gem_name
+
           Gem.activate(gem_name, *requirements)
         end
       end
@@ -477,21 +520,21 @@ end
 # Run just after a binding.pry, before you get dumped in the REPL.
 # This handles the case where Bundler is loaded before Pry.
 # NOTE: This hook happens *before* :before_session
-Pry.config.hooks.add_hook(:when_started, :debundle) {
+Pry.config.hooks.add_hook(:when_started, :debundle) do
   Pry.debundle!
 
   begin
-    require 'awesome_print'
+    require "awesome_print"
     Pry.config.print = proc { |output, value| output.puts value.ai }
   rescue LoadError
-    puts 'no awesome_print :('
+    puts "no awesome_print :("
   end
 
-#   begin
-#     require 'hirb'
-#   rescue LoadError
-#     puts ".pryrc: hirb not installed (try 'gem install hirb')"
-#   end
+  #   begin
+  #     require 'hirb'
+  #   rescue LoadError
+  #     puts ".pryrc: hirb not installed (try 'gem install hirb')"
+  #   end
 
   # from https://github.com/pry/pry/wiki/FAQ#awesome_print
   # if defined? Hirb
@@ -514,11 +557,9 @@ Pry.config.hooks.add_hook(:when_started, :debundle) {
 
   #   Hirb.enable
   # end
-}
+end
 
 # Run after every line of code typed.
 # This handles the case where you load something that loads bundler
 # into your Pry.
-Pry.config.hooks.add_hook(:after_eval, :debundle){ Pry.debundle! }
-
-
+Pry.config.hooks.add_hook(:after_eval, :debundle) { Pry.debundle! }
