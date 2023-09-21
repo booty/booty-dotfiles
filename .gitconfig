@@ -2,7 +2,7 @@
 	name = John Rose
 	email = johnedmundrose@gmail.com
 [core]
-	editor = subl -n -w
+	editor = code-insiders --wait
 [diff]
 	tool = bcomp
 [merge]

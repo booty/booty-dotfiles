@@ -14,6 +14,8 @@ if defined?(PryByebug)
   Pry.commands.alias_command "bdac", "break --disable-all; continue"
 end
 
+# -- Booty's stuff -------------------------------------------------------------
+
 def pbcopy(obj)
   IO.popen("pbcopy", "w") { |pipe| pipe.puts obj }
 end
@@ -26,8 +28,6 @@ def jstack
   stuff = caller.reject { |x| x["rbenv/versions"] }
   stuff.map { |y| y.gsub(/\/Users\/booty/, "~").gsub(/compliancemate/, "cm") }
 end
-
-# -- Booty's stuff -------------------------------------------------------------
 
 def jhash(num: 5, increment: 1)
   key = :a
