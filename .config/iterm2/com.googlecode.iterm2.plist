@@ -3877,7 +3877,7 @@
 			<key>Screen</key>
 			<integer>-1</integer>
 			<key>Scrollback Lines</key>
-			<integer>1000</integer>
+			<integer>0</integer>
 			<key>Selected Text Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -4268,7 +4268,7 @@
 			<key>Unicode Version</key>
 			<integer>9</integer>
 			<key>Unlimited Scrollback</key>
-			<false/>
+			<true/>
 			<key>Use Bold Font</key>
 			<true/>
 			<key>Use Bright Bold</key>
@@ -7812,12 +7812,16 @@
 			</dict>
 			<key>Ansi 2 Color</key>
 			<dict>
-				<key>Blue Component</key>
+				<key>Alpha Component</key>
 				<real>1</real>
+				<key>Blue Component</key>
+				<real>0.59607843137254901</real>
+				<key>Color Space</key>
+				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.64729022979736328</real>
+				<real>0.95294117647058818</real>
 				<key>Red Component</key>
-				<real>0.23074191808700562</real>
+				<real>0.61568627450980395</real>
 			</dict>
 			<key>Ansi 3 Color</key>
 			<dict>
@@ -7830,12 +7834,16 @@
 			</dict>
 			<key>Ansi 4 Color</key>
 			<dict>
+				<key>Alpha Component</key>
+				<real>1</real>
 				<key>Blue Component</key>
-				<real>0.52549022436141968</real>
+				<real>0.74901960784313726</real>
+				<key>Color Space</key>
+				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.96078431606292725</real>
+				<real>0.40000000000000002</real>
 				<key>Red Component</key>
-				<real>0.56078433990478516</real>
+				<real>0.0039215686274509803</real>
 			</dict>
 			<key>Ansi 5 Color</key>
 			<dict>
@@ -7848,21 +7856,29 @@
 			</dict>
 			<key>Ansi 6 Color</key>
 			<dict>
+				<key>Alpha Component</key>
+				<real>1</real>
 				<key>Blue Component</key>
-				<real>0.52549022436141968</real>
+				<real>0.95432621240615845</real>
+				<key>Color Space</key>
+				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.96078431606292725</real>
+				<real>0.83549023289737723</real>
 				<key>Red Component</key>
-				<real>0.56078433990478516</real>
+				<real>0.33009739741066824</real>
 			</dict>
 			<key>Ansi 7 Color</key>
 			<dict>
+				<key>Alpha Component</key>
+				<real>1</real>
 				<key>Blue Component</key>
-				<real>0.69674980640411377</real>
+				<real>0.90764713287353516</real>
+				<key>Color Space</key>
+				<string>sRGB</string>
 				<key>Green Component</key>
-				<real>0.27381426095962524</real>
+				<real>0.90764713287353516</real>
 				<key>Red Component</key>
-				<real>0.729411780834198</real>
+				<real>0.90764713287353516</real>
 			</dict>
 			<key>Ansi 8 Color</key>
 			<dict>
@@ -8451,11 +8467,11 @@
 			<key>Name</key>
 			<string>Booty's Ocean</string>
 			<key>Non Ascii Font</key>
-			<string>InputMonoCompressed-Light 19</string>
+			<string>InputMonoCompressed-Light 17</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>InconsolataNF-Regular 20</string>
+			<string>InconsolataNF-Regular 18</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Place Prompt at First Column</key>
