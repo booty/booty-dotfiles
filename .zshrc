@@ -13,12 +13,12 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=
 autoload -U colors && colors
 
 # autocompletions, duh. disabled because it kind of sucks?
-# source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh 
+# source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 git_info() {
   local branch
   branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
-  
+
   if [ -n "$branch" ]; then
     local dirty
     dirty=$(git diff --quiet || echo "*")
@@ -27,7 +27,7 @@ git_info() {
 }
 
 ruby_info() {
-  local foo 
+  local foo
   foo=$(ruby -e "puts RUBY_VERSION" 2>/dev/null)
 
   if [ -n "$foo" ]; then
@@ -37,7 +37,7 @@ ruby_info() {
 
 # return current python version
 python_info() {
-  local foo 
+  local foo
   foo=$(python -c "import sys; foo=sys.version; print(foo[:foo.find(' ')])" 2>/dev/null)
 
   if [ -n "$foo" ]; then
@@ -54,6 +54,7 @@ battery_info() {
   echo "%F{yellow}[⚡️ $charger_wattage 🔋 $battery_percent] "
 }
 
+# TODO: `ioreg -w 0 -f -r -c AppleSmartBattery` might be much faster than `system_profiler SPPowerDataType`
 battery_info_plus() {
   local raw charger_wattage battery_percent battery_icon
   raw=$(/usr/sbin/system_profiler SPPowerDataType)
@@ -66,7 +67,7 @@ battery_info_plus() {
   fi
 
   if [ "$battery_percent" -lt 25 ]; then
-    battery_icon="🪫"
+    battery_icon="🪫 " # need this extra space, for some reason
   else
     battery_icon="🔋"
   fi
@@ -76,16 +77,41 @@ battery_info_plus() {
 
 # return the current datetime
 datetime_info() {
-  local foo 
+  local foo
   foo=$(date +"%Y-%m-%d %H:%M:%S")
   echo "%F{orange}[$foo] "
 }
+
+spwd() {
+  paths=(${(s:/:)PWD})
+
+  cur_path='/'
+  cur_short_path='/'
+  for directory in ${paths[@]}
+  do
+    cur_dir=''
+    for (( i=0; i<${#directory}; i++ )); do
+      cur_dir+="${directory:$i:1}"
+      matching=("$cur_path"/"$cur_dir"*/)
+      if [[ ${#matching[@]} -eq 1 ]]; then
+        break
+      fi
+    done
+    cur_short_path+="$cur_dir/"
+    cur_path+="$directory/"
+  done
+
+  printf %q "${cur_short_path: : -1}"
+  echo
+}
+
 
 function precmd {
   # echo "precmd"
   # MY_RPROMPT="$(datetime_info)$(git_info)$(python_info)$(ruby_info)%F{yellow}[%~]%f"
 
-  MY_RPROMPT="%F{cyan}[%~]%f $(git_info)$(battery_info_plus)"
+  RPROMPT="%F{cyan}[%~]%f $(git_info)$(battery_info_plus)"
+
 
   # if [[ -d ./venv ]] ; then
   #   echo "I'm deactivating the virtualenv, genius (<-- this is sarcasm)"
@@ -99,11 +125,19 @@ function precmd {
 }
 
 setopt prompt_subst
-PS1=" %F{cyan}%#%f "
-RPROMPT='$MY_RPROMPT'
+
+PS1="%#%f "
+# PS1=" %F{cyan}%2~%#%f "
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source /Users/booty/.iterm2_shell_integration.zsh
+
+# ░░░░░░░█▄█░█▀█░█▀▀░█▀▀░█▄█░█▀█░▀█▀░█▀▄░▀█▀░█░█░░░░░░
+# ░░░░░░░█░█░█▀█░▀▀█░▀▀█░█░█░█▀█░░█░░█▀▄░░█░░▄▀▄░░░░░░
+# ░░░░░░░▀░▀░▀░▀░▀▀▀░▀▀▀░▀░▀░▀░▀░░▀░░▀░▀░▀▀▀░▀░▀░░░░░░
+
+alias mm.pg="psql -h localhost -q -p 5423 -d mm_dev -U postgres"
+alias mm.pgwatch="watch -n 2 psql -h localhost -q -p 5423 -d mm_dev -U postgres -c \"select id, name, extension, hash, state from datafiles;\""
 
 # ░░░░░░░░░█▀▀░█▀▄░▀█▀░▀█▀░█▀█░█▀▄░█▀▀░░░░░░░░░░
 # ░░░░░░░░░█▀▀░█░█░░█░░░█░░█░█░█▀▄░▀▀█░░░░░░░░░░
@@ -167,11 +201,14 @@ alias gnukelocalorphans="git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/
 # ░░░░░░░░░█▀▀░░█░░░█░░█▀█░█░█░█░█░░░░░░░░░░
 # ░░░░░░░░░▀░░░░▀░░░▀░░▀░▀░▀▀▀░▀░▀░░░░░░░░░░
 
-alias va="source venv/bin/activate"
-alias p3="python3"
-alias pv="python3 --version"
+# Virtualenvs
+alias v.a="source venv/bin/activate"
+alias v.de="deactivate"
+alias v.make="python -m venv venv"
+# iPython
 alias ip="ipython"
-alias pynew="rsync -av /Volumes/Huggy/code/samplemod/ . --exclude='.git/' && curl https://raw.githubusercontent.com/github/gitignore/main/Python.gitignore -o .gitignore && git init"
+alias ipp="ipython -i"
+# alias pynew="rsync -av /Volumes/Huggy/code/samplemod/ . --exclude='.git/' && curl https://raw.githubusercontent.com/github/gitignore/main/Python.gitignore -o .gitignore && git init"
 
 # ░░░░░░░░░█▀▄░█▀▀░█░█░░░█▄█░▀█▀░█▀▀░█▀▀░░░░░░░░░░
 # ░░░░░░░░░█░█░█▀▀░▀▄▀░░░█░█░░█░░▀▀█░█░░░░░░░░░░░░
@@ -249,11 +286,17 @@ function gco() {
 # ░░░░░░░░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░░░░░░░░░░
 
 alias reload="source ~/.zshrc"
-alias cag="clear; ag --ignore-dir=vendor,log -W 100 $1"
+# alias cag="clear; ag --ignore-dir=vendor,log,venv,node_modules -W 100 $1"
+alias cag="clear; ag --ignore-dir=vendor,log,venv,node_modules -W 100 "
+
+alias cag.py="cag --python "
+alias cag.rb="cag --ruby "
+alias cag.js="cag -js"
 alias lls="ls -lah"
 alias lah="ls -lah"
-alias twee="tree --filelimit=20"
-alias ez="eza --all --color-scale --ignore-glob='.git|venv' --icons"
+alias twee="tree --filelimit=10 -I 'node_modules|.git|venv|.DS_Store'"
+alias twee2="tree --filelimit=10  -L 2 -I 'node_modules|.git|venv|.DS_Store'"
+alias ez="eza --all --color-scale --ignore-glob='.git|venv|node_modules' --icons"
 alias et="ez --tree"
 alias el="et --long"
 alias shellcrap="$EDITOR ~/.zshrc ~/.oh-my-zsh/themes/booty.zsh-theme ~/.zshenv"
@@ -310,8 +353,20 @@ toiletfonts () {
 	  toilet -f $fname $fname
 	done
 }
+function h1() {
+    toilet_output=$(toilet -w 180 -f pagga "   $1   ")
+    echo "$toilet_output" | sed "s/^/# /"
+}
+function h1c() {
+    toilet_output=$(toilet -w 180 -f pagga "   $1   ")
+    echo "$toilet_output" | sed "s/^/# /" | pbcopy
+}
+# a function that sends the output of header to my_comment
+
+
 alias toylet="toilet -w 180 -f mono12"
-alias ttoylet="toilet -w 180 -f pagga" # Used to generate the "headers" in this file
+alias ttoylet="toilet -w 180 -f pagga"
+
 
 # ░░░░░░░░░█▀█░█▀▀░▄▀▄░█░░░░░░░░░░░░
 # ░░░░░░░░░█▀▀░▀▀█░█\█░█░░░░░░░░░░░░
@@ -332,20 +387,17 @@ cat ~/.zsh_history | ag -v "yt\-dlp|youtube\-dl" > ~/.zsh_history-tmp && mv ~/.z
 
 alias sshfix="eval \"$(ssh-agent)\" && ssh-add ~/.ssh/id_rsa"
 
-
-
 # ░░░░░░░░░█▀█░█▀█░▀█▀░█░█░░░░░░░░░░
 # ░░░░░░░░░█▀▀░█▀█░░█░░█▀█░░░░░░░░░░
 # ░░░░░░░░░▀░░░▀░▀░░▀░░▀░▀░░░░░░░░░░
 
-# needed for some gems, packages e.g. pg, psycopg2like 
-export PATH="/usr/local/opt/postgresql@16/bin:$PATH"    
+# needed for some gems, packages e.g. pg, psycopg2like
+export PATH="/usr/local/opt/postgresql@16/bin:$PATH"
 
-echo "╔═════════════╗"
-echo "║𝖑𝖔𝖆𝖉𝖊𝖉 .𝖟𝖘𝖍𝖗𝖈║"
-echo "╚═════════════╝"
+# echo "╔═════════════╗"
+# echo "║𝖑𝖔𝖆𝖉𝖊𝖉 .𝖟𝖘𝖍𝖗𝖈║"
+# echo "╚═════════════╝"
 
 # ░░░░░░░░░█▀█░█░█░▀█▀░█▀█░░░░░█▀█░█▀▄░█▀▄░█▀▀░█▀▄░░░▀▀█░█░█░█▀█░█░█░░░░░░░░░░
 # ░░░░░░░░░█▀█░█░█░░█░░█░█░▄▄▄░█▀█░█░█░█░█░█▀▀░█░█░░░░░█░█░█░█░█░█▀▄░░░░░░░░░░
 # ░░░░░░░░░▀░▀░▀▀▀░░▀░░▀▀▀░░░░░▀░▀░▀▀░░▀▀░░▀▀▀░▀▀░░░░▀▀░░▀▀▀░▀░▀░▀░▀░░░░░░░░░░
-
