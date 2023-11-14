@@ -137,7 +137,13 @@ source /Users/booty/.iterm2_shell_integration.zsh
 # ░░░░░░░▀░▀░▀░▀░▀▀▀░▀▀▀░▀░▀░▀░▀░░▀░░▀░▀░▀▀▀░▀░▀░░░░░░
 
 alias mm.pg="psql -h localhost -q -p 5423 -d mm_dev -U postgres"
-alias mm.pgwatch="watch -n 2 psql -h localhost -q -p 5423 -d mm_dev -U postgres -c \"select id, name, extension, hash, state from datafiles;\""
+alias mm.schema="pg_dump -h localhost -p 5423 -d mm_dev -U postgres --schema-only"
+alias mm.s="screen -S massmatrix -c ./.screenrc"
+alias mm.check="ruff . --fix && mypy --strict-optional --follow-imports=skip api/"
+alias mm.c="mm.check"
+alias mm.test="mm.check && pytest"
+alias mm.t="mm.test"
+# alias mm.pgwatch="watch -n 2 psql -h localhost -q -p 5423 -d mm_dev -U postgres -c \"select id, name, extension, hash, state from datafiles;\""
 
 # ░░░░░░░░░█▀▀░█▀▄░▀█▀░▀█▀░█▀█░█▀▄░█▀▀░░░░░░░░░░
 # ░░░░░░░░░█▀▀░█░█░░█░░░█░░█░█░█▀▄░▀▀█░░░░░░░░░░
@@ -202,12 +208,18 @@ alias gnukelocalorphans="git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/
 # ░░░░░░░░░▀░░░░▀░░░▀░░▀░▀░▀▀▀░▀░▀░░░░░░░░░░
 
 # Virtualenvs
+alias va="source venv/bin/activate"
 alias v.a="source venv/bin/activate"
 alias v.de="deactivate"
-alias v.make="python -m venv venv"
+alias v.create="python -m venv venv"
 # iPython
 alias ip="ipython"
 alias ipp="ipython -i"
+# Alembic
+# alias ale.nuke="alembic downgrade base && alembic upgrade head"
+alias ale.redo="alembic downgrade -1 && alembic upgrade head"
+alias ale.down="alembic downgrade -1"
+alias ale.up="alembic upgrade head"
 # alias pynew="rsync -av /Volumes/Huggy/code/samplemod/ . --exclude='.git/' && curl https://raw.githubusercontent.com/github/gitignore/main/Python.gitignore -o .gitignore && git init"
 
 # ░░░░░░░░░█▀▄░█▀▀░█░█░░░█▄█░▀█▀░█▀▀░█▀▀░░░░░░░░░░
@@ -285,18 +297,28 @@ function gco() {
 # ░░░░░░░░░▀▀█░█▀█░█▀▀░█░░░█░░░░░░░░░░░░
 # ░░░░░░░░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░░░░░░░░░░
 
+export HISTFILESIZE=99999999 # max lines in history file on disk
+export HISTSIZE=100000 # number of commands in shell's in-memory history (number of commands with up/down arrow)
+export SAVEHIST=100000 # number of commands to save in history file after shell closes
+alias iterm2clear='echo -e "\033]1337;ClearScrollback\a"'
+alias ic='iterm2clear'
 alias reload="source ~/.zshrc"
-# alias cag="clear; ag --ignore-dir=vendor,log,venv,node_modules -W 100 $1"
-alias cag="clear; ag --ignore-dir=vendor,log,venv,node_modules -W 100 "
 
+# Find stuff
+# alias cag="clear; ag --ignore-dir=vendor,log,venv,node_modules -W 100 $1"
+alias cag="iterm2clear; ag --ignore-dir=vendor,log,venv,node_modules -W 100 "
 alias cag.py="cag --python "
 alias cag.rb="cag --ruby "
-alias cag.js="cag -js"
+alias cag.js="cag --js"
+
+# Directory listing stuff
 alias lls="ls -lah"
 alias lah="ls -lah"
-alias twee="tree --filelimit=10 -I 'node_modules|.git|venv|.DS_Store'"
-alias twee2="tree --filelimit=10  -L 2 -I 'node_modules|.git|venv|.DS_Store'"
-alias ez="eza --all --color-scale --ignore-glob='.git|venv|node_modules' --icons"
+alias twee.all="tree -I 'node_modules|.git|venv|.DS_Store|__pycache__'"
+alias twee="twee.all --filelimit=10 -L 3"
+alias twee.3x20="twee.all -L 3 --filelimit=20 "
+alias twee.dirs="twee.all -L 99 --filelimit=20 -d"
+alias ez="eza --all --color-scale --ignore-glob='.git|venv|node_modules|__pycache__' --icons"
 alias et="ez --tree"
 alias el="et --long"
 alias shellcrap="$EDITOR ~/.zshrc ~/.oh-my-zsh/themes/booty.zsh-theme ~/.zshenv"
@@ -361,19 +383,14 @@ function h1c() {
     toilet_output=$(toilet -w 180 -f pagga "   $1   ")
     echo "$toilet_output" | sed "s/^/# /" | pbcopy
 }
-# a function that sends the output of header to my_comment
-
 
 alias toylet="toilet -w 180 -f mono12"
 alias ttoylet="toilet -w 180 -f pagga"
-
 
 # ░░░░░░░░░█▀█░█▀▀░▄▀▄░█░░░░░░░░░░░░
 # ░░░░░░░░░█▀▀░▀▀█░█\█░█░░░░░░░░░░░░
 # ░░░░░░░░░▀░░░▀▀▀░░▀\░▀▀▀░░░░░░░░░░
 
-export HISTFILESIZE=99999999
-export HISTSIZE=99999
 export PSQL_EDITOR="subl --wait"
 
 # ░░░░░░░░░█▄█░▀█▀░█▀▀░█▀▀░░░░░░░░░░
@@ -382,8 +399,10 @@ export PSQL_EDITOR="subl --wait"
 
 source $(brew --prefix)/etc/profile.d/z.sh
 
-# sanitize history
-cat ~/.zsh_history | ag -v "yt\-dlp|youtube\-dl" > ~/.zsh_history-tmp && mv ~/.zsh_history-tmp ~/.zsh_history
+# sanitize history, de-dupe history
+HISTFILE=~/.zsh_history
+TEMPFILE=$(mktemp)
+cat "$HISTFILE" | ag -v "yt\-dlp|youtube\-dl" > "$TEMPFILE" && awk '!seen[$0]++' "$TEMPFILE" > "$HISTFILE"
 
 alias sshfix="eval \"$(ssh-agent)\" && ssh-add ~/.ssh/id_rsa"
 
@@ -393,10 +412,6 @@ alias sshfix="eval \"$(ssh-agent)\" && ssh-add ~/.ssh/id_rsa"
 
 # needed for some gems, packages e.g. pg, psycopg2like
 export PATH="/usr/local/opt/postgresql@16/bin:$PATH"
-
-# echo "╔═════════════╗"
-# echo "║𝖑𝖔𝖆𝖉𝖊𝖉 .𝖟𝖘𝖍𝖗𝖈║"
-# echo "╚═════════════╝"
 
 # ░░░░░░░░░█▀█░█░█░▀█▀░█▀█░░░░░█▀█░█▀▄░█▀▄░█▀▀░█▀▄░░░▀▀█░█░█░█▀█░█░█░░░░░░░░░░
 # ░░░░░░░░░█▀█░█░█░░█░░█░█░▄▄▄░█▀█░█░█░█░█░█▀▀░█░█░░░░░█░█░█░█░█░█▀▄░░░░░░░░░░
