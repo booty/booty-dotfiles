@@ -1,12 +1,1 @@
-/*
-!.gemrc
-!.gitconfig
-!.gitignore
-!.pryrc
-!.psqlrc
-!.rubocop.yml
-!.sqliterc
-!.zshrc
-!.zshenv
-!symlinks
-!.config.DS_Store
+.DS_Store
