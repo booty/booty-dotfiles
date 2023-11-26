@@ -1,4 +1,4 @@
-. /usr/local/opt/asdf/libexec/asdf.sh
+. /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 # ░░░░░░░░░▀▀█░█▀▀░█░█░░░░░░░░░░
 # ░░░░░░░░░▄▀░░▀▀█░█▀█░░░░░░░░░░
@@ -6,6 +6,11 @@
 
 autoload -Uz compinit
 compinit -u
+# Append to history file instead of overwriting
+setopt INC_APPEND_HISTORY
+# This option allows immediate sharing of history between all sessions.
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
 
 # Make autocomplete case-insensitive
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
@@ -105,23 +110,8 @@ spwd() {
   echo
 }
 
-
 function precmd {
-  # echo "precmd"
-  # MY_RPROMPT="$(datetime_info)$(git_info)$(python_info)$(ruby_info)%F{yellow}[%~]%f"
-
   RPROMPT="%F{cyan}[%~]%f $(git_info)$(battery_info_plus)"
-
-
-  # if [[ -d ./venv ]] ; then
-  #   echo "I'm deactivating the virtualenv, genius (<-- this is sarcasm)"
-  #   deactivate
-  # fi
-
-  # if [[ -d ./venv ]] ; then
-  #   echo "I'm activating the virtualenv, dummy"
-  #   . ./venv/bin/activate
-  # fi
 }
 
 setopt prompt_subst
@@ -131,6 +121,13 @@ PS1="%#%f "
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source /Users/booty/.iterm2_shell_integration.zsh
+
+# Source all files in ~/scripts directory
+for file in ~/scripts/*; do
+    if [ -f "$file" ]; then
+        source "$file"
+    fi
+done
 
 # ░░░░░░░█▄█░█▀█░█▀▀░█▀▀░█▄█░█▀█░▀█▀░█▀▄░▀█▀░█░█░░░░░░
 # ░░░░░░░█░█░█▀█░▀▀█░▀▀█░█░█░█▀█░░█░░█▀▄░░█░░▄▀▄░░░░░░
@@ -265,33 +262,33 @@ alias subedit="cd ~/Dropbox/Sublime/Packages/User"
 #  `gco 123` will take you right to "jr-my-long-branch-name-cw-123"
 #  assuming you don't have any other branches w/ "123" in them
 
-function gco() {
-  local branches branch
+# function gco() {
+#   local branches branch
 
-  # Be a solid bro and point them in the right direction if fzf not installed
-  if ! [ -x "$(command -v fzf)" ]; then
-    echo "fzf not installed. See https://github.com/junegunn/fzf for info or simply \`brew install fzf\`"
-    return 1
-  fi
+#   # Be a solid bro and point them in the right direction if fzf not installed
+#   if ! [ -x "$(command -v fzf)" ]; then
+#     echo "fzf not installed. See https://github.com/junegunn/fzf for info or simply \`brew install fzf\`"
+#     return 1
+#   fi
 
-  # If no search term supplied, list them
-  if [ -z "$1" ]; then
-    branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
-    branch=$(echo "$branches" | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-    git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
-    return 0
-  fi
+#   # If no search term supplied, list them
+#   if [ -z "$1" ]; then
+#     branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
+#     branch=$(echo "$branches" | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+#     git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+#     return 0
+#   fi
 
-  # If search term supplied...
-  branches=$(git branch | ag $1 | fzf --filter="$1" --no-sort | sed -e 's/^[ \s\*]*//')
-  if [ -z "$branches" ]; then
-    return 1 # No matches!
-  elif [ $(wc -l <<< "$branches") -eq 1 ]; then
-    git checkout $branches # There was only one match, so let's jump to it
-  else
-    git checkout $(git branch | ag $1 | fzf) # There were multiple matches; list them
-  fi
-}
+#   # If search term supplied...
+#   branches=$(git branch | ag $1 | fzf --filter="$1" --no-sort | sed -e 's/^[ \s\*]*//')
+#   if [ -z "$branches" ]; then
+#     return 1 # No matches!
+#   elif [ $(wc -l <<< "$branches") -eq 1 ]; then
+#     git checkout $branches # There was only one match, so let's jump to it
+#   else
+#     git checkout $(git branch | ag $1 | fzf) # There were multiple matches; list them
+#   fi
+# }
 
 # ░░░░░░░░░█▀▀░█░█░█▀▀░█░░░█░░░░░░░░░░░░
 # ░░░░░░░░░▀▀█░█▀█░█▀▀░█░░░█░░░░░░░░░░░░

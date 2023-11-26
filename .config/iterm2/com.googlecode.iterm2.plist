@@ -8467,11 +8467,11 @@
 			<key>Name</key>
 			<string>Booty's Ocean</string>
 			<key>Non Ascii Font</key>
-			<string>InputMonoCompressed-Light 24</string>
+			<string>Menlo-Regular 20</string>
 			<key>Non-ASCII Anti Aliased</key>
 			<true/>
 			<key>Normal Font</key>
-			<string>InconsolataNF-Regular 25</string>
+			<string>Inconsolata-Regular 20</string>
 			<key>Option Key Sends</key>
 			<integer>0</integer>
 			<key>Place Prompt at First Column</key>
