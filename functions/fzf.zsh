@@ -1,7 +1,9 @@
-# FZF-powered history search
 fzf_history_search() {
     local selected_command
-    selected_command=$(fc -l 1 | fzf --height 60% --reverse --no-sort +s --tac --tiebreak=index)
+    # Get the current command line content
+    local initial_query="$LBUFFER"
+
+    selected_command=$(fc -l 1 | fzf --height 60% --reverse --no-sort +s --tac --tiebreak=index --query="$initial_query")
 
     if [ -n "$selected_command" ]; then
         local cmd
@@ -13,6 +15,6 @@ fzf_history_search() {
     zle redisplay
 }
 
-# Bind the function to a key combination (e.g., Ctrl+R)
+# Bind this function to Ctrl-R
 zle -N fzf_history_search
 bindkey '^R' fzf_history_search
