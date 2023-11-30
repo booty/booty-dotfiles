@@ -1,5 +1,15 @@
+# ░░░░░░░░░█▀█░█▀▀░▄▀▄░█░░░░░░░░░░░░
+# ░░░░░░░░░█▀▀░▀▀█░█\█░█░░░░░░░░░░░░
+# ░░░░░░░░░▀░░░▀▀▀░░▀\░▀▀▀░░░░░░░░░░
+
+export PSQL_EDITOR="subl --wait"
+
 alias pgconf="$EDITOR /usr/local/var/postgresql@16/postgresql.conf"
+
 alias pgtail="tail -f -n 1000 /usr/local/var/log/postgresql@16.log"
+
+# needed for some gems, packages e.g. pg, psycopg2like
+export PATH="/usr/local/opt/postgresql@16/bin:$PATH"
 
 # alias set_danger_color="it2setcolor preset 'Solarized Darcula'"
 # alias unset_danger_color="it2setcolor preset 'Solarized Light'"

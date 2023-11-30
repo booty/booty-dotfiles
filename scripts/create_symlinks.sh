@@ -23,7 +23,7 @@ for file in "$dir"/{.,}*; do
     # Target path in the home directory
     target="$HOME/$filename"
     # if [[ -n "$DEBUG_DOTFILES" ]]; then
-      echo "$target will be linked to $file"
+    #   echo "$target will be linked to $file"
     # fi
 
     # Check if a file at the target path exists and is not a symlink

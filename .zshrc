@@ -1,4 +1,4 @@
-DEBUG_DOTFILES=1
+# DEBUG_DOTFILES=1
 
 debug_echo() {
     if [[ -n "$DEBUG_DOTFILES" ]]; then
@@ -11,6 +11,7 @@ debug_echo ".zshrc begin"
 . ~/booty-dotfiles/scripts/create_symlinks.sh
 
 export PATH="/opt/homebrew/bin/:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
 for file in ~/booty-dotfiles/functions/*; do
     if [ -f "$file" ]; then
@@ -120,6 +121,11 @@ alias cag.py="cag --python "
 alias cag.rb="cag --ruby "
 alias cag.js="cag --js"
 
+ffind() {                                                                        [~/code/mzml_web]
+    find . -type f -name "*$1*"
+}
+
+
 # Directory listing stuff
 alias lls="ls -lah"
 alias lah="ls -lah"
@@ -159,11 +165,6 @@ function h1c() {
 alias toylet="toilet -w 180 -f mono12"
 alias ttoylet="toilet -w 180 -f pagga"
 
-# ░░░░░░░░░█▀█░█▀▀░▄▀▄░█░░░░░░░░░░░░
-# ░░░░░░░░░█▀▀░▀▀█░█\█░█░░░░░░░░░░░░
-# ░░░░░░░░░▀░░░▀▀▀░░▀\░▀▀▀░░░░░░░░░░
-
-export PSQL_EDITOR="subl --wait"
 
 # ░░░░░░░░░█▄█░▀█▀░█▀▀░█▀▀░░░░░░░░░░
 # ░░░░░░░░░█░█░░█░░▀▀█░█░░░░░░░░░░░░
@@ -177,13 +178,6 @@ TEMPFILE=$(mktemp)
 cat "$HISTFILE" | ag -v "yt\-dlp|youtube\-dl" > "$TEMPFILE" && awk '!seen[$0]++' "$TEMPFILE" > "$HISTFILE"
 
 alias sshfix="eval \"$(ssh-agent)\" && ssh-add ~/.ssh/id_rsa"
-
-# ░░░░░░░░░█▀█░█▀█░▀█▀░█░█░░░░░░░░░░
-# ░░░░░░░░░█▀▀░█▀█░░█░░█▀█░░░░░░░░░░
-# ░░░░░░░░░▀░░░▀░▀░░▀░░▀░▀░░░░░░░░░░
-
-# needed for some gems, packages e.g. pg, psycopg2like
-export PATH="/usr/local/opt/postgresql@16/bin:$PATH"
 
 # ░░░░░░░░░█▀█░█░█░▀█▀░█▀█░░░░░█▀█░█▀▄░█▀▄░█▀▀░█▀▄░░░▀▀█░█░█░█▀█░█░█░░░░░░░░░░
 # ░░░░░░░░░█▀█░█░█░░█░░█░█░▄▄▄░█▀█░█░█░█░█░█▀▀░█░█░░░░░█░█░█░█░█░█▀▄░░░░░░░░░░
