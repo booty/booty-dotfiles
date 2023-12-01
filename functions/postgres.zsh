@@ -4,9 +4,11 @@
 
 export PSQL_EDITOR="subl --wait"
 
-alias pgconf="$EDITOR /usr/local/var/postgresql@16/postgresql.conf"
+export POSTGRES_VERSION="16"
 
-alias pgtail="tail -f -n 1000 /usr/local/var/log/postgresql@16.log"
+alias pgconf="$EDITOR $HOMEBREW_PREFIX/var/postgresql@$POSTGRES_VERSION/postgresql.conf"
+
+alias pgtail="tail -f -n 1000 ls $HOMEBREW_PREFIX/var/log/postgresql@$POSTGRES_VERSION.log"
 
 # needed for some gems, packages e.g. pg, psycopg2like
 export PATH="/usr/local/opt/postgresql@16/bin:$PATH"
