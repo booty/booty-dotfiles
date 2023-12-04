@@ -22,7 +22,7 @@ select_git_branch() {
     # Fetch all branches (local and remote), remove duplicates, and feed into fzf
     branches=$(git branch -a | sed 's/remotes\/origin\///' | awk '!seen[$0]++')
     # Get the current command line content
-    local initial_query="$LBUFFER"
+    local initial_query="$1"
 
     # Use fzf to select a branch
     selected_branch=$(echo "$branches" | fzf --height 60% --layout=reverse --query="$initial_query")
