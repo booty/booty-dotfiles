@@ -21,6 +21,7 @@ alias gnukelocalorphans="git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/
 select_git_branch() {
     # Fetch all branches (local and remote), remove duplicates, and feed into fzf
     branches=$(git branch -a | sed 's/remotes\/origin\///' | awk '!seen[$0]++')
+
     # Get the current command line content
     local initial_query="$1"
 

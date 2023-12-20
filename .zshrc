@@ -49,8 +49,8 @@ export EDITOR="code-insiders"
 alias sublcomp="$EDITOR /Users/booty/Dropbox/Sublime/Packages/User/"
 alias ci="code-insiders"
 
-alias worktime="sudo cp /etc/hosts.work-time /etc/hosts"
-alias funtime="sudo $EDITOR /etc/hosts"
+# alias worktime="sudo cp /etc/hosts.work-time /etc/hosts"
+# alias funtime="sudo $EDITOR /etc/hosts"
 alias zshrc="$EDITOR ~/booty-dotfiles/"
 
 alias brewup="brew update && brew upgrade && brew cleanup && brew doctor"

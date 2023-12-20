@@ -6,7 +6,7 @@ export PSQL_EDITOR="subl --wait"
 
 export POSTGRES_VERSION="16"
 
-alias pgconf="$EDITOR $HOMEBREW_PREFIX/var/postgresql@$POSTGRES_VERSION/postgresql.conf"
+alias pgconf="sudo $EDITOR $HOMEBREW_PREFIX/var/postgresql@$POSTGRES_VERSION/postgresql.conf"
 
 alias pgtail="tail -f -n 1000 ls $HOMEBREW_PREFIX/var/log/postgresql@$POSTGRES_VERSION.log"
 
