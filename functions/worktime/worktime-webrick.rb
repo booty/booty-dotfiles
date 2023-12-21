@@ -1,30 +1,51 @@
-require 'webrick'
-require 'openssl'
+require "webrick"
+require "openssl"
 
-# If you don't already have an SSL certificate and a private key, you can create them using OpenSSL:
+PUBLIC_HTML_ROOT = File.expand_path("/Users/booty/booty-dotfiles/functions/worktime/worktime-public")
+SSL_CERT_PATH = File.expand_path("/Users/booty/booty-dotfiles/functions/worktime/worktime-private/worktime-certificate.crt")
+SSL_PRIVATE_KEY_PATH = File.expand_path("/Users/booty/booty-dotfiles/functions/worktime/worktime-private/worktime-private-key-decrypted.key")
 
-# bash
+SERVER_PORT = 80
+SECURE_SERVER_PORT = 443
 
-# openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+server = secure_server = nil
 
-# This command generates a new private key (key.pem) and a self-signed certificate (cert.pem) valid for 365 days. You'll be prompted to enter some information for the certificate.
-
-
-root = File.expand_path '/Users/booty/booty-dotfiles/functions/worktime/'  # Set this to your web server's root directory
-server = WEBrick::HTTPServer.new(
-  # Port: 8000,
-  Port: 80,
-  DocumentRoot: root,
-  # SSLEnable: true,
-  # SSLCertificate: OpenSSL::X509::Certificate.new(File.read("cert.pem")),
-  # SSLPrivateKey: OpenSSL::PKey::RSA.new(File.read("key.pem"))
-)
-
-trap 'INT' do server.shutdown end
-
-begin
-  server.start
-  puts "Server started on port #{server.config[:Port]}"
-rescue Errno::EADDRINUSE => e
-  puts "No big deal, but: Another server is already running on port #{server.config[:Port]}."
+server_thread = Thread.new do
+  puts "What the fuck"
+  begin
+    server = WEBrick::HTTPServer.new(
+      Port: SERVER_PORT,
+      DocumentRoot: PUBLIC_HTML_ROOT,
+    )
+    puts "Server starting on port #{SERVER_PORT}"
+    server.start
+  rescue Errno::EADDRINUSE => e
+    puts "No big deal, but: Another server is already running on port #{SERVER_PORT}."
+  end
 end
+
+secure_server_thread = Thread.new do
+  puts "What the shit"
+  begin
+    secure_server = WEBrick::HTTPServer.new(
+      Port: SECURE_SERVER_PORT,
+      DocumentRoot: PUBLIC_HTML_ROOT,
+      SSLEnable: true,
+      SSLCertificate: OpenSSL::X509::Certificate.new(File.read(SSL_CERT_PATH)),
+      SSLPrivateKey: OpenSSL::PKey::RSA.new(File.read(SSL_PRIVATE_KEY_PATH)),
+    )
+    puts "Secure server starting on port #{SECURE_SERVER_PORT}"
+    secure_server.start
+  rescue Errno::EADDRINUSE => e
+    puts "No big deal, but: Another server is already running on port #{SECURE_SERVER_PORT}."
+  end
+end
+
+trap "INT" do
+  puts "Shutting down servers..."
+  server&.shutdown
+  secure_server&.shutdown
+end
+
+server_thread.join
+secure_server_thread.join
