@@ -15,29 +15,35 @@ alias gd="git diff"
 alias gnukelocalorphans="git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D"
 
 
-
-
 # Function to fetch branches and pipe into fzf
 select_git_branch() {
-    # Fetch all branches (local and remote), remove duplicates, and feed into fzf
-    branches=$(git branch -a | sed 's/remotes\/origin\///' | awk '!seen[$0]++')
+    # Fetch all branches (local and remote), remove duplicates, format, and store in an array
+    branches=$(git branch -a | sed 's/remotes\/origin\///' | awk '!seen[$0]++' | awk '{$1=$1};1')
 
     # Get the current command line content
     local initial_query="$1"
 
-    # Use fzf to select a branch
-    selected_branch=$(echo "$branches" | fzf --height 60% --layout=reverse --query="$initial_query")
+    # Check if the input matches an existing branch exactly
+    IFS=$'\n' branches_ary=($(echo "${branches[@]}"))
+    for branch in "${branches_ary[@]}"; do
+        if [ "$branch" = "$initial_query" ]; then
+            git checkout "$initial_query"
+            return
+        fi
+    done
+
+    # Use fzf to select a branch if no exact match is found
+    selected_branch=$(echo "${branches[@]}" | fzf --height 60% --layout=reverse --query="$initial_query")
 
     # Check if a branch is selected
     if [ -n "$selected_branch" ]; then
-        # Strip out any additional characters (like '*')
-        clean_branch=$(echo $selected_branch | sed 's/^[* ]*//')
-
         # Checkout the selected branch
-        git checkout $clean_branch
+        git checkout "$selected_branch"
     else
         echo "No branch selected."
     fi
 }
+
+
 
 alias gco=select_git_branch

@@ -1,51 +1,33 @@
-require "webrick"
-require "openssl"
+require "puma"
+require "rack"
 
 PUBLIC_HTML_ROOT = File.expand_path("/Users/booty/booty-dotfiles/functions/worktime/worktime-public")
 SSL_CERT_PATH = File.expand_path("/Users/booty/booty-dotfiles/functions/worktime/worktime-private/worktime-certificate.crt")
 SSL_PRIVATE_KEY_PATH = File.expand_path("/Users/booty/booty-dotfiles/functions/worktime/worktime-private/worktime-private-key-decrypted.key")
 
-SERVER_PORT = 80
-SECURE_SERVER_PORT = 443
+app = Rack::Directory.new(PUBLIC_HTML_ROOT)
 
-server = secure_server = nil
+# HTTP server
+http_server = Puma::Server.new(app)
+http_server.add_tcp_listener("0.0.0.0", 80)
+http_thread = Thread.new { http_server.run }
 
-server_thread = Thread.new do
-  puts "What the fuck"
-  begin
-    server = WEBrick::HTTPServer.new(
-      Port: SERVER_PORT,
-      DocumentRoot: PUBLIC_HTML_ROOT,
-    )
-    puts "Server starting on port #{SERVER_PORT}"
-    server.start
-  rescue Errno::EADDRINUSE => e
-    puts "No big deal, but: Another server is already running on port #{SERVER_PORT}."
-  end
-end
+# HTTPS server
+https_server = Puma::Server.new(app)
+https_server.add_ssl_listener("0.0.0.0", 443, {
+                                cert: SSL_CERT_PATH,
+                                key: SSL_PRIVATE_KEY_PATH,
+                              })
+https_thread = Thread.new { https_server.run }
 
-secure_server_thread = Thread.new do
-  puts "What the shit"
-  begin
-    secure_server = WEBrick::HTTPServer.new(
-      Port: SECURE_SERVER_PORT,
-      DocumentRoot: PUBLIC_HTML_ROOT,
-      SSLEnable: true,
-      SSLCertificate: OpenSSL::X509::Certificate.new(File.read(SSL_CERT_PATH)),
-      SSLPrivateKey: OpenSSL::PKey::RSA.new(File.read(SSL_PRIVATE_KEY_PATH)),
-    )
-    puts "Secure server starting on port #{SECURE_SERVER_PORT}"
-    secure_server.start
-  rescue Errno::EADDRINUSE => e
-    puts "No big deal, but: Another server is already running on port #{SECURE_SERVER_PORT}."
-  end
-end
+puts "HTTP Server starting on port 80"
+puts "HTTPS Server starting on port 443"
 
 trap "INT" do
   puts "Shutting down servers..."
-  server&.shutdown
-  secure_server&.shutdown
+  http_server.stop(true)
+  https_server.stop(true)
 end
 
-server_thread.join
-secure_server_thread.join
+http_thread.join
+https_thread.join
