@@ -6,9 +6,10 @@ function update_hosts_and_relaunch_firefox() {
   else
     sudo cp -f "$1" /etc/hosts
     sudo killall -HUP mDNSResponder
-    echo "Updated hosts file. Killing and relaunching Firefox!"
+    echo "Updated hosts file. Killing Discord; killing and relaunching Firefox."
     # Firefox will cache DNS lookups
     pkill Firefox
+    pkill Discord
     open -a Firefox
   fi
 }
