@@ -9,6 +9,7 @@ function update_hosts_and_relaunch_firefox() {
     echo "Updated hosts file. Killing Discord; killing and relaunching Firefox."
     # Firefox will cache DNS lookups
     pkill Firefox
+    pkill firefox
     pkill Discord
     open -a Firefox
   fi

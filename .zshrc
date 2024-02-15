@@ -27,9 +27,32 @@ done
 autoload -Uz compinit
 compinit -u
 
-setopt INC_APPEND_HISTORY # Append to history file instead of overwriting
-setopt SHARE_HISTORY # Immediate sharing of history between all sessions.
+# Immediately append to history file:
+setopt INC_APPEND_HISTORY
+
+# Record timestamp in history:
+setopt EXTENDED_HISTORY
+
+# Expire duplicate entries first when trimming history:
+setopt HIST_EXPIRE_DUPS_FIRST
+
+# Dont record an entry that was just recorded again:
 setopt HIST_IGNORE_DUPS
+
+# Delete old recorded entry if new entry is a duplicate:
+setopt HIST_IGNORE_ALL_DUPS
+
+# Do not display a line previously found:
+setopt HIST_FIND_NO_DUPS
+
+# Dont record an entry starting with a space:
+setopt HIST_IGNORE_SPACE
+
+# Dont write duplicate entries in the history file:
+setopt HIST_SAVE_NO_DUPS
+
+# Share history between all sessions:
+setopt SHARE_HISTORY
 
 # Make autocomplete case-insensitive
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
@@ -188,3 +211,5 @@ alias sshfix="eval \"$(ssh-agent)\" && ssh-add ~/.ssh/id_rsa"
 if [ -n "$DEBUG_DOTFILES" ]; then
     echo ".zshrc end"
 fi
+export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+export PATH="/Users/booty/.cargo/bin:$PATH"

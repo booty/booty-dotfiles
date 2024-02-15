@@ -5,7 +5,7 @@
 alias mm.pg="psql -h localhost -q -p 5423 -d mm_dev -U postgres"
 alias mm.schema="pg_dump -h localhost -p 5423 -d mm_dev -U postgres --schema-only"
 alias mm.s="screen -S massmatrix -c ./.screenrc"
-alias mm.check="ruff . --fix && mypy --strict-optional --follow-imports=skip api/"
+alias mm.check="ruff . --fix && mypy --strict-optional --follow-imports=skip api/ && ag jbootz"
 alias mm.c="mm.check"
 alias mm.test="mm.check && pytest"
 alias mm.t="mm.test"
