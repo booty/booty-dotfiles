@@ -202,14 +202,16 @@ cat "$HISTFILE" | ag -v "yt\-dlp|youtube\-dl" > "$TEMPFILE" && awk '!seen[$0]++'
 
 alias sshfix="eval \"$(ssh-agent)\" && ssh-add ~/.ssh/id_rsa"
 
-# ░░░░░░░░░█▀█░█░█░▀█▀░█▀█░░░░░█▀█░█▀▄░█▀▄░█▀▀░█▀▄░░░▀▀█░█░█░█▀█░█░█░░░░░░░░░░
-# ░░░░░░░░░█▀█░█░█░░█░░█░█░▄▄▄░█▀█░█░█░█░█░█▀▀░█░█░░░░░█░█░█░█░█░█▀▄░░░░░░░░░░
-# ░░░░░░░░░▀░▀░▀▀▀░░▀░░▀▀▀░░░░░▀░▀░▀▀░░▀▀░░▀▀▀░▀▀░░░░▀▀░░▀▀▀░▀░▀░▀░▀░░░░░░░░░░
-
-
 # echo "hello" if DEBUG_DOTFILES is set
 if [ -n "$DEBUG_DOTFILES" ]; then
     echo ".zshrc end"
 fi
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
-export PATH="/Users/booty/.cargo/bin:$PATH"
+export PATH="$PATH:/opt/homebrew/opt/openjdk/bin"
+export PATH="$PATH:/Users/booty/.cargo/bin"
+export PATH="$PATH:/usr/local/bin/nextflow"
+export JAVA_CMD=/opt/homebrew/opt/openjdk/bin/java
+
+
+# ░░░░░░░░░█▀█░█░█░▀█▀░█▀█░░░░░█▀█░█▀▄░█▀▄░█▀▀░█▀▄░░░▀▀█░█░█░█▀█░█░█░░░░░░░░░░
+# ░░░░░░░░░█▀█░█░█░░█░░█░█░▄▄▄░█▀█░█░█░█░█░█▀▀░█░█░░░░░█░█░█░█░█░█▀▄░░░░░░░░░░
+# ░░░░░░░░░▀░▀░▀▀▀░░▀░░▀▀▀░░░░░▀░▀░▀▀░░▀▀░░▀▀▀░▀▀░░░░▀▀░░▀▀▀░▀░▀░▀░▀░░░░░░░░░░
