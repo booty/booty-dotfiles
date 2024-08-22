@@ -1,3 +1,4 @@
+# Uncomment this for verbosity
 # DEBUG_DOTFILES=1
 
 debug_echo() {
@@ -13,6 +14,7 @@ debug_echo ".zshrc begin"
 export PATH="/opt/homebrew/bin/:$PATH"
 export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
 
+# Load everything in functions/
 for file in ~/booty-dotfiles/functions/*; do
     if [ -f "$file" ]; then
         debug_echo "sourcing $file"
@@ -187,6 +189,8 @@ function h1c() {
 
 alias toylet="toilet -w 180 -f mono12"
 alias ttoylet="toilet -w 180 -f pagga"
+
+alias ic='echo -e "\033]1337;ClearScrollback\a"'
 
 
 # ░░░░░░░░░█▄█░▀█▀░█▀▀░█▀▀░░░░░░░░░░

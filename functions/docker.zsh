@@ -2,11 +2,11 @@
 # ░░░░░░░░░█░█░█░█░█░░░█▀▄░█▀▀░█▀▄░░░░░░░░░░
 # ░░░░░░░░░▀▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀░▀░░░░░░░░░░
 
-alias d.up='docker-compose up'
-alias d.down='docker-compose down'
-alias d.kick='docker-compose restart'
-alias d.stop='docker-compose stop'
-alias d.ps='docker-compose ps'
+alias d.up='docker compose up'
+alias d.down='docker compose down'
+alias d.kick='docker compose restart'
+alias d.stop='docker compose stop'
+alias d.ps='docker compose ps'
 # alias d.build='docker-compose up -d --build --force-recreate' # Rebuild Container
 # alias d.logs='docker-compose logs -f --tail=100'
 # alias d.bomb='docker stop $(docker ps -q) || true && docker rm -v $(docker ps -aq) || true' # Destroy all containers (including running ones)
@@ -18,4 +18,4 @@ alias d.ps='docker-compose ps'
 
 alias d.nuke='docker stop $(docker ps -aq) 2>/dev/null || true && docker rm $(docker ps -aq) 2>/dev/null || true && docker rmi $(docker images -q) 2>/dev/null || true && docker system prune -af'
 
-alias d.rebuild='docker-compose up -d --build --force-recreate'
+alias d.rebuild='docker compose up -d --build --force-recreate'
