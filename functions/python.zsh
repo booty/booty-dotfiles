@@ -17,7 +17,4 @@ alias ale.down="alembic downgrade -1"
 alias ale.up="alembic upgrade head"
 
 # Good for running a single pytest
-pyt() {
-    local args="$@"
-    ic && ENV=test pytest "$args"
-}
+alias pyt='ic && ENV=test pytest'
