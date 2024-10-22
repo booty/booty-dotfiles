@@ -19,3 +19,5 @@ alias d.ps='docker compose ps'
 alias d.nuke='docker stop $(docker ps -aq) 2>/dev/null || true && docker rm $(docker ps -aq) 2>/dev/null || true && docker rmi $(docker images -q) 2>/dev/null || true && docker system prune -af'
 
 alias d.rebuild='docker compose up -d --build --force-recreate'
+
+alias d.w="docker compose restart mm_worker"

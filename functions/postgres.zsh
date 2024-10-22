@@ -2,7 +2,7 @@
 # ░░░░░░░░░█▀▀░▀▀█░█\█░█░░░░░░░░░░░░
 # ░░░░░░░░░▀░░░▀▀▀░░▀\░▀▀▀░░░░░░░░░░
 
-export PSQL_EDITOR="subl --wait"
+export PSQL_EDITOR="code-insiders --wait"
 
 export POSTGRES_VERSION="16"
 
