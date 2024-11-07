@@ -189,15 +189,20 @@ function h1c() {
 
 alias toylet="toilet -w 180 -f mono12"
 alias ttoylet="toilet -w 180 -f pagga"
-
 alias ic='echo -e "\033]1337;ClearScrollback\a"'
 
+# ░░░░░░░▀▀█░█▀█░█░█░▀█▀░█▀▄░█▀▀░░░░░░
+# ░░░░░░░▄▀░░█░█░▄▀▄░░█░░█░█░█▀▀░░░░░░
+# ░░░░░░░▀▀▀░▀▀▀░▀░▀░▀▀▀░▀▀░░▀▀▀░░░░░░
+
+eval "$(zoxide init zsh)"
+alias z="zoxide query --interactive"
+alias zf="zoxide query --interactive -- --preview 'ls -la {}' --layout=reverse"
 
 # ░░░░░░░░░█▄█░▀█▀░█▀▀░█▀▀░░░░░░░░░░
 # ░░░░░░░░░█░█░░█░░▀▀█░█░░░░░░░░░░░░
 # ░░░░░░░░░▀░▀░▀▀▀░▀▀▀░▀▀▀░░░░░░░░░░
 
-source $(brew --prefix)/etc/profile.d/z.sh
 
 # sanitize history, de-dupe history
 HISTFILE=~/.zsh_history
