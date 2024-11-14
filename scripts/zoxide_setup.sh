@@ -7,6 +7,8 @@ dirs=(
     "$HOME/code/mzml_web"
     "/Volumes/Pokey"
     "/Volumes/Pokey/Video/Ganked"
+    "/Volumes/Pokey/Video/Ganked/Music"
+    "/Volumes/Pokey/Video/Ganked/Sports"
     "$HOME"
 )
 

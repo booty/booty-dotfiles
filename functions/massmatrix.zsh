@@ -19,7 +19,9 @@ alias mzml="mz"
 
 # alias mm.restart_workers="docker restart mzml_web-mm_worker-1 mzml_web-mm_worker-2 mzml_web-mm_worker-3 mzml_web-mm_worker-4"
 
-alias mm.restart_workers="docker restart mzml_web-mm_worker-1 &
-docker restart mzml_web-mm_worker-2 &
-docker restart mzml_web-mm_worker-3 &
-docker restart mzml_web-mm_worker-4 &"
+# alias mm.restart_workers="docker restart mzml_web-mm_worker-1 &
+# docker restart mzml_web-mm_worker-2 &
+# docker restart mzml_web-mm_worker-3 &
+# docker restart mzml_web-mm_worker-4 &"
+
+alias mm.restartworkers="docker compose restart mm_worker mm_rmq"
