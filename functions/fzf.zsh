@@ -7,7 +7,7 @@ export FZF_DEFAULT_OPTS="
 
 # Bind CTRL-R to an fzf-enabled reverse search
 fzf-history-widget() {
-  BUFFER=$(history | sed 's/\*//' | fzf --height=40% --layout=reverse --tac | sed 's/ *[0-9]* *//')
+  BUFFER=$(history 1 | sed 's/\*//' | fzf --height=60% --layout=reverse --tac | sed 's/ *[0-9]* *//')
   CURSOR=$#BUFFER
   zle redisplay
 }

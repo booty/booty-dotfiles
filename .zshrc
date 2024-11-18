@@ -29,42 +29,10 @@ done
 autoload -Uz compinit
 compinit -u
 
-# Immediately append to history file:
-setopt INC_APPEND_HISTORY
-
-# Record timestamp in history:
-setopt EXTENDED_HISTORY
-
-# Expire duplicate entries first when trimming history:
-setopt HIST_EXPIRE_DUPS_FIRST
-
-# Dont record an entry that was just recorded again:
-setopt HIST_IGNORE_DUPS
-
-# Delete old recorded entry if new entry is a duplicate:
-setopt HIST_IGNORE_ALL_DUPS
-
-# Do not display a line previously found:
-setopt HIST_FIND_NO_DUPS
-
-# Dont record an entry starting with a space:
-setopt HIST_IGNORE_SPACE
-
-# Dont write duplicate entries in the history file:
-setopt HIST_SAVE_NO_DUPS
-
-# Share history between all sessions:
-setopt SHARE_HISTORY
-
 # Make autocomplete case-insensitive
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
-# autoload -Uz compinit && compinit
 autoload -U colors && colors
 
-# autocompletions, duh. disabled because it kind of sucks?
-# source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-# source /Users/booty/.iterm2_shell_integration.zsh
 
 # ░░░░░░░░░█▀▀░█▀▄░▀█▀░▀█▀░█▀█░█▀▄░█▀▀░░░░░░░░░░
 # ░░░░░░░░░█▀▀░█░█░░█░░░█░░█░█░█▀▄░▀▀█░░░░░░░░░░
@@ -82,73 +50,40 @@ alias brewup="brew update && brew upgrade && brew cleanup && brew doctor"
 
 
 
-# ░░░░░░░░░█▀▀░▀▀█░█▀▀░░░░░░░░░░
-# ░░░░░░░░░█▀▀░▄▀░░█▀▀░░░░░░░░░░
-# ░░░░░░░░░▀░░░▀▀▀░▀░░░░░░░░░░░░
-
-# ~~ Usage ~~
-#
-# 1. Install fzf via `brew install fzf` or your package manager of choice
-# 2. You probably want to copy this to ~/.bashrc or ~/.zshrc, or (better yet) load this file from your .bashrc/.zshrc
-# 3. `gco` will list the 30 most recently-active commits
-# 4. `gco foo` will list all branches matching "foo"
-# 5. If `gco foo` returns only a single result, we skip the list and
-#    check it out.
-#
-#  Particularly Useful for branches named after issue numbers.
-#
-#  `gco 123` will take you right to "jr-my-long-branch-name-cw-123"
-#  assuming you don't have any other branches w/ "123" in them
-
-# function gco() {
-#   local branches branch
-
-#   # Be a solid bro and point them in the right direction if fzf not installed
-#   if ! [ -x "$(command -v fzf)" ]; then
-#     echo "fzf not installed. See https://github.com/junegunn/fzf for info or simply \`brew install fzf\`"
-#     return 1
-#   fi
-
-#   # If no search term supplied, list them
-#   if [ -z "$1" ]; then
-#     branches=$(git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format="%(refname:short)") &&
-#     branch=$(echo "$branches" | fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-#     git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
-#     return 0
-#   fi
-
-#   # If search term supplied...
-#   branches=$(git branch | ag $1 | fzf --filter="$1" --no-sort | sed -e 's/^[ \s\*]*//')
-#   if [ -z "$branches" ]; then
-#     return 1 # No matches!
-#   elif [ $(wc -l <<< "$branches") -eq 1 ]; then
-#     git checkout $branches # There was only one match, so let's jump to it
-#   else
-#     git checkout $(git branch | ag $1 | fzf) # There were multiple matches; list them
-#   fi
-# }
-
 # ░░░░░░░░░█▀▀░█░█░█▀▀░█░░░█░░░░░░░░░░░░
 # ░░░░░░░░░▀▀█░█▀█░█▀▀░█░░░█░░░░░░░░░░░░
 # ░░░░░░░░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░░░░░░░░░░
 
-# Set history sizes
-HISTSIZE=999999999
-SAVEHIST=999999999
-HISTFILESIZE=1000000000     # Limit history file to 1GB
 
-# Set history file path (optional if you want a custom location)
-HISTFILE=~/.zsh_history
 
-# History options
-setopt APPEND_HISTORY            # Append to the history file, don't overwrite it
-setopt INC_APPEND_HISTORY        # Add commands to the history file immediately, not when the shell exits
-setopt SHARE_HISTORY             # Share history across all sessions
+HISTFILE="$HOME/.zsh_history"
+
+# sanitize history, de-dupe history
+TEMPFILE=$(mktemp)
+cat "$HISTFILE" | ag -v "yt\-dl|youtube\-dl" > "$TEMPFILE" && awk '!seen[$0]++' "$TEMPFILE" > "$HISTFILE"
+
+HISTSIZE=1000000
+SAVEHIST=1000000
+setopt BANG_HIST                 # Treat the '!' character specially during expansion.
+setopt EXTENDED_HISTORY          # Write the history file in the ":start:elapsed;command" format.
+setopt INC_APPEND_HISTORY        # Write to the history file immediately, not when the shell exits.
+setopt SHARE_HISTORY             # Share history between all sessions.
 setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicate entries first when trimming history.
-setopt HIST_IGNORE_DUPS          # Don\'t record an entry that was just recorded again.
+setopt HIST_IGNORE_DUPS          # Don't record an entry that was just recorded again.
 setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a duplicate.
+setopt HIST_FIND_NO_DUPS         # Do not display a line previously found.
+setopt HIST_IGNORE_SPACE         # Don't record an entry starting with a space.
+# setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history file.
 setopt HIST_REDUCE_BLANKS        # Remove superfluous blanks before recording entry.
-setopt HIST_SAVE_NO_DUPS         # Don\'t write duplicate entries in the history file.
+setopt HIST_VERIFY               # Don't execute immediately upon history expansion.
+
+# fc  -R                           # Load full history file from disk now that we've set all options
+
+# echo "Pre-fc: HISTSIZE=$HISTSIZE, SAVEHIST=$SAVEHIST, HISTFILE=$HISTFILE"
+# echo "Pre-fc: Loaded $(fc -l | wc -l) commands"
+fc -R
+# echo "Post-fc: Loaded $(fc -l | wc -l) commands"
+# echo "~~what the fuck~~"
 
 alias iterm2clear='echo -e "\033]1337;ClearScrollback\a"'
 alias ic='iterm2clear'
@@ -237,10 +172,7 @@ zz() {
 # ░░░░░░░░░▀░▀░▀▀▀░▀▀▀░▀▀▀░░░░░░░░░░
 
 
-# sanitize history, de-dupe history
-HISTFILE=~/.zsh_history
-TEMPFILE=$(mktemp)
-cat "$HISTFILE" | ag -v "yt\-dlp|youtube\-dl" > "$TEMPFILE" && awk '!seen[$0]++' "$TEMPFILE" > "$HISTFILE"
+
 
 alias sshfix="eval \"$(ssh-agent)\" && ssh-add ~/.ssh/id_rsa"
 

@@ -25,3 +25,6 @@ alias mzml="mz"
 # docker restart mzml_web-mm_worker-4 &"
 
 alias mm.restartworkers="docker compose restart mm_worker mm_rmq"
+
+alias mm.db.dev="usql postgres://postgres:postgres@localhost:5423/mm_dev"
+alias mm.db.dev="usql postgres://postgres:postgres@localhost:5423/mm_test"
