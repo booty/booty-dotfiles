@@ -1,3 +1,11 @@
+# Function to abbreviate paths
+zsh_directory_name() {
+  local dir=$1
+  dir=${dir/#$HOME/~}          # Replace $HOME with ~
+  dir=${dir//\/code\//\/c\/}   # Replace /code/ with /c/
+  echo $dir
+}
+
 git_info() {
   local branch
   branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
@@ -65,33 +73,17 @@ datetime_info() {
   echo "%F{orange}[$foo] "
 }
 
-spwd() {
-  paths=(${(s:/:)PWD})
 
-  cur_path='/'
-  cur_short_path='/'
-  for directory in ${paths[@]}
-  do
-    cur_dir=''
-    for (( i=0; i<${#directory}; i++ )); do
-      cur_dir+="${directory:$i:1}"
-      matching=("$cur_path"/"$cur_dir"*/)
-      if [[ ${#matching[@]} -eq 1 ]]; then
-        break
-      fi
-    done
-    cur_short_path+="$cur_dir/"
-    cur_path+="$directory/"
-  done
-
-  printf %q "${cur_short_path: : -1}"
-  echo
-}
+# This version has batt info
+# function precmd {
+#   RPROMPT="%F{cyan}[%~]%f $(git_info)$(battery_info_plus)"
+# }
 
 function precmd {
-  RPROMPT="%F{cyan}[%~]%f $(git_info)$(battery_info_plus)"
+  RPROMPT="%F{cyan}$(git_info)"
 }
 
 setopt prompt_subst
-
-PS1="%#%f "
+# PS1="%#%f "
+# PS1='$(zsh_directory_name $PWD) %# '
+PROMPT="%~ %# "
