@@ -12,4 +12,5 @@ alias ip="ipython"
 alias ipp="ipython -i"
 
 # Good for running a single pytest
+alias py="python"
 alias pyt='ic && ENV=test pytest -vv'

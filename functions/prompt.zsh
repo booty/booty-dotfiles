@@ -86,4 +86,4 @@ function precmd {
 setopt prompt_subst
 # PS1="%#%f "
 # PS1='$(zsh_directory_name $PWD) %# '
-PROMPT="%~ %# "
+PROMPT="%~ %# %F{cyan}"

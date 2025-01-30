@@ -12,8 +12,12 @@ alias gsl="git log --oneline --decorate -20"
 alias gsla="git log --oneline --decorate --graph --all -20"
 alias gslap="slap = log --oneline --decorate --graph --all"
 alias gd="git diff"
-alias gfuckyeah="git add . && git commit --amend --no-edit && git push --force"
-alias gnukelocalorphans="git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D"
+
+alias g.fuckyeah="git add . && git commit --amend --no-edit && git push --force"
+alias g.nukeorphans="git fetch --prune && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D"
+alias g.turbonukeorphans="git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D"
+
+
 
 
 # Function to fetch branches and pipe into fzf
