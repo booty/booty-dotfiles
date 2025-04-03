@@ -28,6 +28,8 @@ alias n.wave-gentle="play -n synth brownnoise synth pinknoise mix synth 0 0 0 20
 # Band limited pink noise, centered at 60Hz with a bandwidth of 60Hz (so, 30-90hz)
 alias n.pink60="play -n synth -1 pinknoise band -n 60 60 gain -30"
 
-alias n.rain="play -n synth -1 pinknoise band -n 1000 150 gain -10 reverb 50"
+alias n.rain.quiet="play -n synth -1 pinknoise band -n 1000 150 gain -10 reverb 50"
+
+alias n.rain.loud="play -n synth -1 pinknoise band -n 1000 150 gain 0 reverb 50"
 
 alias n.fireplace="play -n synth -1 brownnoise band -n 4000 400 gain -15 overdrive 10 20"

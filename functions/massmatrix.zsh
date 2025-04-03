@@ -28,3 +28,8 @@ alias mm.restartworkers="docker compose restart mm_worker mm_rmq"
 
 alias mm.db.dev="usql postgres://postgres:postgres@localhost:5423/mm_dev"
 alias mm.db.dev="usql postgres://postgres:postgres@localhost:5423/mm_test"
+
+alias mm.tail.debug="docker compose logs -f --tail=500 mm_worker mm_api mm_db"
+alias mm.tail.db="docker compose logs -f --tail=500 mm_db"
+alias mm.tail.api="docker compose logs -f --tail=500 mm_api"
+alias mm.tail.worker="docker compose logs -f --tail=500 mm_worker"
