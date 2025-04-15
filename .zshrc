@@ -44,7 +44,7 @@ alias ci="code-insiders"
 
 # alias worktime="sudo cp /etc/hosts.work-time /etc/hosts"
 # alias funtime="sudo $EDITOR /etc/hosts"
-alias zshrc="$EDITOR ~/booty-dotfiles/"
+alias zshrc="cd ~/booty-dotfiles && $EDITOR ~/booty-dotfiles/"
 
 alias brewup="brew update && brew upgrade && brew cleanup && brew doctor"
 

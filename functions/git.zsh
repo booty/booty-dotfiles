@@ -3,20 +3,24 @@
 # ░░░░░░░░░▀▀▀░▀▀▀░░▀░░░░▀▀▀░▀▀▀░▀▀░░░░░░░░░░░
 
 alias gs="git status"
-alias gt="gittower ."
 alias ga="git add"
 alias gcm="git commit --message"
 alias gp="git push"
 alias gl="git log"
-alias gsl="git log --oneline --decorate -20"
-alias gsla="git log --oneline --decorate --graph --all -20"
-alias gslap="slap = log --oneline --decorate --graph --all"
 alias gd="git diff"
 
+alias g.log="git log --oneline --decorate -20"
+alias g.graphlog="git log --oneline --decorate --graph --all"
 alias g.fuckyeah="git add . && git commit --amend --no-edit && git push --force"
+alias g.unstage="git reset HEAD --"
+alias g.amend="git commit --amend --no-edit"
+alias g.diff="git diff --staged"
+
+# If you run these by accident and nuke a branch you wanted, you can recover it with:
+# git reflog
+# git checkout -b <branch_name> <commit_hash>
 alias g.nukeorphans="git fetch --prune && git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D"
 alias g.turbonukeorphans="git branch -r | awk '{print $1}' | egrep -v -f /dev/fd/0 <(git branch -vv | grep origin) | awk '{print $1}' | xargs git branch -D"
-
 
 
 
