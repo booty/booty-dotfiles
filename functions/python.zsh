@@ -4,7 +4,11 @@
 
 # Virtualenvs
 alias venv="python3 -m venv venv"
-alias va="source venv/bin/activate"
+va() {
+    if ! source venv/bin/activate 2>/dev/null; then
+        source .venv/bin/activate 2>/dev/null || echo "Failed to activate virtual environment."
+    fi
+}
 alias da="deactivate"
 
 # iPython

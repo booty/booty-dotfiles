@@ -53,6 +53,15 @@ select_git_branch() {
     fi
 }
 
+g.set_remote() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: set_remote <git-url> [<remote-name>]"
+    return 1
+  fi
+  local url=$1
+  local remote=${2:-origin}
+  git remote set-url "$remote" "$url"
+}
 
 
 alias gco=select_git_branch
