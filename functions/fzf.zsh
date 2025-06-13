@@ -8,7 +8,7 @@ fzf-history-widget() {
   local selected
   # Use BUFFER as the default query for fzf
   # tac reverses the order of the history (it's cat backward lol)
-  selected=$(history 1 | tac | sed 's/\*//' | fzf --height=80% --layout=reverse --scheme=history --query="$BUFFER" | sed 's/ *[0-9]* *//')
+  selected=$(history 1 | gtac | sed 's/\*//' | fzf --height=80% --layout=reverse --scheme=history --query="$BUFFER" | sed 's/ *[0-9]* *//')
   if [[ -n $selected ]]; then
     BUFFER=$selected
     CURSOR=$#BUFFER

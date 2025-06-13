@@ -5,7 +5,7 @@ yt-dlp.as() {
     echo "Usage: foo <YouTube URL>"
     return 1
   fi
-  yt-dlp --cookies-from-browser chrome:"Profile 2" "$1"
+  yt-dlp --impersonate chrome --cookies-from-browser  chrome:"Profile 2" "$1"
 }
 
 # Add this function to your ~/.zshrc (feel free to name it as you like)
