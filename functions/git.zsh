@@ -54,14 +54,29 @@ select_git_branch() {
 }
 
 g.set_remote() {
-  if [[ -z "$1" ]]; then
-    echo "Usage: set_remote <git-url> [<remote-name>]"
+  # make sure we're in a git repo
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Not a git repo!" >&2
     return 1
   fi
-  local url=$1
-  local remote=${2:-origin}
-  git remote set-url "$remote" "$url"
-}
 
+  # grab and print the old URL
+  old_url=$(git remote get-url origin 2>/dev/null) || {
+    echo "No origin remote set."
+    old_url=""
+  }
+  echo "Old origin URL: $old_url"
+
+  # set new URL (first arg)
+  if [[ -z $1 ]]; then
+    echo "Usage: setgitremote <new-url>" >&2
+    return 1
+  fi
+  git remote set-url origin "$1"
+
+  # confirm
+  new_url=$(git remote get-url origin)
+  echo "New origin URL: $new_url"
+}
 
 alias gco=select_git_branch
